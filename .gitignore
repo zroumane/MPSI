@@ -1,0 +1,10 @@
+*~
+**/.vscode
+*un~
+**/__pycache__
+doc
+fig
+*.pdf
+*.swp
+*.odt#
+**/doc
