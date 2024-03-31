@@ -1,0 +1,272 @@
+TP 1 :
+
+4. a.
+	nom 	region 	superficie 	population 	pib 	
+
+   b.
+	 acteur 	titre 	realisateur 	annee 	score 	
+
+5. a.
+	SELECT nom, population FROM pays;
+
+   b.
+	SELECT acteur, realisateur from cinema;
+
+6. a.
+	SELECT DISTINCT region FROM pays; 
+
+   b. 
+	SELECT DISTINCT titre FROM cinema; 
+
+7 . a.
+	S 
+    b.
+	SELECT DISTINCT titre, 2024-annee as age from cinema
+
+8. a. 
+	SELECT * from pays where population > 2e8 
+	Tous les pays ayant plus de 2e8 habitant
+
+   b.
+	SELECT DISTINCT * from cinema where annee > 1995 
+
+9. 
+	SELECT titre from cinema where acteur = "Richard Gere";
+
+10. 
+	SELECT DISTINCT titre from cinema WHERE realisateur = "Quentin Tarantino" OR acteur = "Quentin Tarantino" 
+
+
+11. a.
+	SELECT nom, MAX(population) FROM pays WHERE region="Europe" 
+	selectionne le pays ayant la polation max en europe
+
+    b.
+	SELECT titre, Min(score) FROM cinema WHERE realisateur="Mel Gibson" 
+	Braveheart
+
+12. a.
+	SELECT count(*) from pays where region="europe" 
+	Nombre de pays en europe
+    b.
+	SELECT count(*) from cinema where acteur="Julia Roberts" 
+	16
+
+13. a.
+	SELECT count(DISTINCT region) from pays
+	8
+
+    b.
+	SELECT COUNT(DISTINCT titre) from cinema
+	1692
+
+14.
+	Select note from ecole where Eleve = "Nicolas";
+
+15.
+	SELECT Eleve from ecole where epreuve = "DS3" AND note > 10;
+
+16. 
+	SELECT AVG(note) from ecole where type = "DM";
+
+17.
+	SELECT count(DISTINCT Eleve) from ecole
+
+18.
+	SELECT epreuve, MAX(note) from ecole where Eleve = "Arianne" 
+
+19.
+	SELECT epreuve from ecole where Eleve = "Olivier" AND note > 9 
+
+20.
+	SELECT MAX(annee), MIN(annee) from cinema
+
+21.
+	SELECT count(DISTINCT titre) from cinema where annee = 1999 
+
+22.
+	SELECT titre from cinema where acteur = realisateur;
+
+23.
+	SELECT nom, pib/population as pib_par_habitant from pays
+
+24.
+	SELECT SUM(population) from pays where region = "South America" 
+
+
+Groupe :
+
+1.
+	SELECT region, SUM(population) from pays GROUP BY region
+
+2.
+	SELECT annee, COUNT(DISTINCT titre) from cinema GROUP BY annee
+
+3.
+	SELECT titre, COUNT(acteur) from cinema GROUP BY titre
+
+4.
+	SELECT acteur, MAX(annee) - MIN(annee) from cinema GROUP BY acteur
+
+5.
+	SELECT epreuve, AVG(note) from ecole GROUP BY epreuve
+
+6.
+	SELECT region, COUNT(nom) from pays where superficie > 1e6 GROUP BY region
+	compte les pays de chaque region ayant une superficie supererieur a 1e6
+
+7.
+	SELECT COUNT(DISTINCT titre), annee from cinema where annee >= 1995 GROUP BY annee
+
+8.
+	SELECT titre, COUNT(*) as nb_acteur from cinema where score = 9 GROUP BY titre
+
+9.
+	SELECT epreuve, COUNT(note) as note_sup_10 from ecole where note >= 10 GROUP BY epreuve
+
+10.
+	SELECT region, COUNT(nom) from pays GROUP BY region HAVING sum(population) > 1.5e9 
+	Donne le nombre de pays par region qui on plus de 1.5e9 habitant
+
+11.
+	SELECT annee, COUNT(titre) from cinema GROUP BY annee HAVING COUNT(DISTINCT titre) >= 100 
+
+12.
+	SELECT epreuve, MAX(note), MIN(note) from ecole GROUP BY epreuve HAVING MAX(note) >= MIN(note)*10 
+
+
+TP 2 :
+
+1. id est unique
+
+2. 
+SELECT * FROM client 
+JOIN article
+
+chaque ligne est l'union d'une ligne de client et d'une de article
+
+3.
+colone email et catégorie des union des ligne de client et article
+
+4.
+SELECT nom, date FROM client 
+JOIN commande
+
+5.
+SELECT * FROM client 
+JOIN commande ON client.id = commande.idclient
+
+chaque commande avec en plus les données de la ligne du client correspondant
+
+6.
+SELECT nom, adresse,date FROM client 
+JOIN commande ON client.id = commande.idclient
+
+7.
+SELECT quantite, contenu.idcommande, prix FROM contenu 
+JOIN article on article.id = contenu.idarticle
+
+8.
+SELECT quantite, idcommande, SUM(quantite*prix) FROM contenu 
+JOIN article on article.id = contenu.idarticle 
+GROUP BY idcommande
+
+9.
+Toutes les commandes avec information de client, commande et contenu
+
+10.
+SELECT article.nom, article.prix, client.nom, adresse, date, quantite FROM client 
+JOIN commande on commande.idclient = client.id 
+JOIN contenu ON contenu.idcommande = commande.idcommande 
+JOIN article ON article.id = contenu.idarticle
+
+11.
+SELECT t1.nom, t2.adresse, t1.adresse FROM client AS t1 
+JOIN client AS t2 ON t1.nom = t2.nom 
+WHERE t1.id != t2.id
+
+Hopital :
+
+12.
+SELECT COUNT(nom), mutuelle FROM malade GROUP BY mutuelle
+
+13.
+SELECT no_malade, code_service FROM hospitalisation
+
+14.
+SELECT nom, malade.numero, code_service FROM malade 
+JOIN hospitalisation ON hospitalisation.no_malade = malade.numero
+
+15.
+SELECT malade.nom, malade.numero, service.nom as nom_service FROM malade 
+JOIN hospitalisation ON hospitalisation.no_malade = malade.numero 
+JOIN service on service.code = code_service
+
+16.
+SELECT docteur.specialite, COUNT(*) FROM docteur 
+GROUP BY docteur.specialite
+
+17.
+SELECT employe.nom, specialite 
+FROM docteur 
+JOIN employe ON employe.numero = docteur.numero 
+JOIN soigne ON soigne.no_docteur = docteur.numero 
+JOIN hospitalisation ON hospitalisation.no_malade = soigne.no_malade 
+WHEREhospitalisation.code_service = "REA"
+
+18.
+SELECT malade.nom, employe.nom FROM soigne 
+JOIN docteur ON soigne.no_docteur = docteur.numero 
+JOIN employe ON docteur.numero = employe.numero 
+JOIN malade ON soigne.no_malade = malade.numero
+
+19.
+SELECT service.nom, employe.nom as directeur FROM service 
+JOIN employe ON employe.numero = service.directeur
+
+20.
+SELECT service.nom, employe.nom as directeur, docteur.specialite FROM service 
+JOIN employe ON employe.numero = service.directeur JOIN docteur ON docteur.numero = service.directeur
+
+21.
+SELECT service.nom, AVG(infirmier.salaire) as moyenne, SUM(infirmier.salaire) as total FROM service 
+JOIN infirmier ON infirmier.code_service = service.code 
+GROUP BY service.code
+
+22.
+SELECT service.nom, AVG(chambre.nb_lits) as nb_lits FROM service 
+JOIN chambre ON chambre.code_service = service.code 
+GROUP BY service.code
+
+23.
+SELECT service.nom, COUNT(*) as nb_chambre, SUM(chambre.nb_lits) as total_lit FROM service JOIN chambre ON chambre.code_service = service.code GROUP BY service.code
+
+24.
+SELECT service.nom, COUNT(*) as nb_chambre_plus_3_lits FROM service JOIN chambre ON chambre.code_service = service.code WHERE chambre.nb_lits >= 3 GROUP BY service.code
+
+25.
+SELECT service.nom FROM service JOIN chambre ON chambre.code_service = service.code GROUP BY service.code HAVING SUM(chambre.nb_lits) >= 15
+
+26.
+SELECT t1.no_malade, t2.no_malade FROM service
+JOIN chambre ON chambre.code_service = service.code
+JOIN hospitalisation as t1 ON t1.no_chambre = chambre.no_chambre
+JOIN hospitalisation as t2 ON t2.no_chambre = chambre.no_chambre
+WHERE t1.no_malade != t2.no_malade AND t1.code_service = t2.code_service
+
+27.
+SELECT m1.nom, m2.nom FROM service
+JOIN chambre ON chambre.code_service = service.code
+JOIN hospitalisation as t1 ON t1.no_chambre = chambre.no_chambre
+JOIN hospitalisation as t2 ON t2.no_chambre = chambre.no_chambre
+JOIN malade as m1 ON m1.numero = t1.no_malade
+JOIN malade as m2 ON m2.numero = t2.no_malade
+WHERE t1.no_malade != t2.no_malade AND t1.code_service = t2.code_service
+
+
+
+
+
+
+
+
